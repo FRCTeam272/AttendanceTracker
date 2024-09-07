@@ -19,7 +19,7 @@ def get_student(query: str):
         return {"Error": str(e)}
 
 @app.get(
-        "/get/student/qrcode/{student_id}",
+        "/get/qrcode/student/{student_id}",
         responses={200: {"content": {"image/png": {}}}},
         response_class=Response
 )
@@ -35,7 +35,7 @@ def get_student_qr_code(student_id: int):
         return {"Error": str(e)}
 
 @app.get(
-        "/get/event/qrcode/{query}",
+        "/get/qrcode/event/{query}",
         responses={200: {"content": {"image/png": {}}}},
         response_class=Response
 )
