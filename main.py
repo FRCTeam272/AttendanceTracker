@@ -4,10 +4,11 @@ import server_functions as sf
 from flasgger import Swagger
 
 import routes_adds
+import routes_gets
 
 def main():
     try:    
-        uvicorn.run(app, host="127.0.0.1", port=8000)
+        uvicorn.run(app, host="127.0.0.1", port=5000)
         pass
     except Exception as e:
         print("closing database session")
