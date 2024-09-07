@@ -54,7 +54,10 @@ session = Session()
 # Example of creating an SQLite database and adding a student
 if __name__ == "__main__":
     # Add a new student
-    new_homeroom_group = HomeroomGroup(name="Test Group")
+    img = None
+    with open('Logo.png', 'rb') as f:
+        img = f.read()
+    new_homeroom_group = HomeroomGroup(name="Test Group", image=img)
     session.add(new_homeroom_group)
     session.commit()
 
