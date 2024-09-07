@@ -1,6 +1,8 @@
 from dbo import HomeroomGroup, StudentEvent, Student, Event, Homeroom, Base, engine, Session
 
 session = Session()
+Base.metadata.create_all(engine)
+    
 
 def add_student(name, homeroom_id):
     global session
@@ -77,10 +79,10 @@ def add_event(name):
         session.rollback()
         raise e
 
-def get_event(event_id):
+def get_event(query):
     global session
     try:
-        event = session.query(Event).filter(Event.id == event_id).first()
+        event = session.query(Event).filter((Event.id == query) | (query == Event.name)).first()
         return event
     except Exception as e:
         raise e
@@ -170,3 +172,28 @@ def add_home_room_group(name, image):
     except Exception as e:
         session.rollback()
         raise e
+
+class Comb_Student_Homeroom_HomeroomGroup:
+    def __init__(self, student: Student, homeroom: Homeroom, homeroom_group: HomeroomGroup):
+        self.student = student
+        self.homeroom = homeroom
+        self.homeroom_group = homeroom_group
+
+def get_full_student_info(query):
+    global session
+    try:
+
+        student = session.query(Student).filter((Student.id == query) | (Student.name == query)).first()
+        print(student.__dict__)
+        # student = session.query(Student).filter(str(Student.id) == query or Student.name == query)
+        homeroom = session.query(Homeroom).filter(Homeroom.id == student.homeroom_id).first()
+        homeroom_group = session.query(HomeroomGroup).filter(HomeroomGroup.id == homeroom.homeroom_group_id).first()
+        return Comb_Student_Homeroom_HomeroomGroup(student, homeroom, homeroom_group)
+    except Exception as e:
+        raise e
+    
+if __name__ == "__main__":
+    query = 1
+    event = session.query(Event).filter((Event.id == query) |  (query == Event.name)).first()
+    print(event.__dict__)    
+    pass
