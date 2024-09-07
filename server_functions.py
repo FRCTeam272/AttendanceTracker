@@ -1,11 +1,12 @@
-from dbo import StudentEvent, Student, Event, Homeroom, Base, engine, Session
+from dbo import HomeroomGroup, StudentEvent, Student, Event, Homeroom, Base, engine, Session
 
 session = Session()
 
-def add_student(first_name, last_name, homeroom_id):
+def add_student(name, homeroom_id):
     global session
     try:
-        new_student = Student(first_name=first_name, last_name=last_name, homeroom_id=homeroom_id)
+        homeroom = session.query(Homeroom).filter(Homeroom.id == homeroom_id or Homeroom.name == homeroom_id).first()
+        new_student = Student(name=name, homeroom_id=homeroom.id)
         session.add(new_student)
         session.commit()
         return new_student
@@ -37,10 +38,11 @@ def get_students_by_homeroom(homeroom_id):
     except Exception as e:
         raise e
     
-def add_homeroom(name):
+def add_homeroom(name, homeroom_group_name):
     global session
     try:
-        new_homeroom = Homeroom(name=name)
+        group = session.query(HomeroomGroup).filter(HomeroomGroup.name == homeroom_group_name).first()
+        new_homeroom = Homeroom(name=name, homeroom_group_id=group.id)
         session.add(new_homeroom)
         session.commit()
         return new_homeroom
@@ -148,4 +150,23 @@ def get_student_events_by_hoomroom(homeroom_id):
         student_events = session.query(StudentEvent).join(Student).filter(Student.homeroom_id == homeroom_id).all()
         return student_events
     except Exception as e:
+        raise e
+    
+def get_student_events_by_homeroom_group(homeroom_group_id):
+    global session
+    try:
+        student_events = session.query(StudentEvent).join(Student).join(Homeroom).filter(Homeroom.homeroom_group_id == homeroom_group_id).all()
+        return student_events
+    except Exception as e:
+        raise e
+
+def add_home_room_group(name, image):
+    global session
+    try:
+        new_homeroom_group = HomeroomGroup(name=name, image=image)
+        session.add(new_homeroom_group)
+        session.commit()
+        return new_homeroom_group
+    except Exception as e:
+        session.rollback()
         raise e
