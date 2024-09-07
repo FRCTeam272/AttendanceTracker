@@ -26,7 +26,9 @@ def try_to_sync():
         with open("backup.dat", "r+") as f:
             for line in f:
                 try:
-                    requests.post(line)
+                    response = requests.post(line)
+                    if response.status_code == 200 or response.status_code == 201:
+                        print("Success")
                 except:
                     print("Error: Could not connect to server, will continue to write to file")
                     return
