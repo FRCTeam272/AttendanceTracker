@@ -7,7 +7,7 @@ async def add_home_room_group(group_name: str, image: UploadFile = File(...)):
     try:
         image_data = await image.read()
         group = sf.add_home_room_group(group_name, image_data)
-        return group.__dict__()
+        return group.__dict__
     except Exception as e:
         return {"Error": str(e)}
 
@@ -15,7 +15,7 @@ async def add_home_room_group(group_name: str, image: UploadFile = File(...)):
 def add_home_room(name: str, homeroom_group_name: str):
     try:
         homeroom = sf.add_home_room(name, homeroom_group_name)
-        return homeroom.__dict__()
+        return homeroom.__dict__
     except Exception as e:
         return {"Error": str(e)}
 
@@ -23,7 +23,7 @@ def add_home_room(name: str, homeroom_group_name: str):
 def add_student(name: str, homeroom_name: str):
     try:
         student = sf.add_student(name, homeroom_name)
-        return student.__dict__()
+        return student.__dict__
     except Exception as e:
         return {"Error": str(e)}
 
@@ -31,7 +31,7 @@ def add_student(name: str, homeroom_name: str):
 def add_event(name: str):
     try:
         event = sf.add_event(name)
-        return event.__dict__()
+        return event.__dict__
     except Exception as e:
         return {"Error": str(e)}
 
@@ -39,6 +39,6 @@ def add_event(name: str):
 def add_student_event(student_id: int, event_id: int, reporter: str):
     try:
         student_event = sf.add_student_event(student_id, event_id, reporter)
-        return student_event.__dict__()
+        return student_event.__dict__
     except Exception as e:
         return {"Error": str(e)}
