@@ -1,5 +1,6 @@
 from dbo import HomeroomGroup, StudentEvent, Student, Event, Homeroom, Base, engine, Session
-
+import json
+    
 session = Session()
 Base.metadata.create_all(engine)
     
@@ -184,16 +185,64 @@ def get_full_student_info(query):
     try:
 
         student = session.query(Student).filter((Student.id == query) | (Student.name == query)).first()
-        print(student.__dict__)
+        # print(student.__dict__)
         # student = session.query(Student).filter(str(Student.id) == query or Student.name == query)
         homeroom = session.query(Homeroom).filter(Homeroom.id == student.homeroom_id).first()
         homeroom_group = session.query(HomeroomGroup).filter(HomeroomGroup.id == homeroom.homeroom_group_id).first()
         return Comb_Student_Homeroom_HomeroomGroup(student, homeroom, homeroom_group)
     except Exception as e:
         raise e
-    
+
+def report_events():
+    global session
+
+    def parse(x):
+        try:
+            return x[1]['total by group']
+        except:
+            return x[1]
+
+    try:
+        report = {}
+        for attendance in session.query(StudentEvent).order_by(StudentEvent.time_stamp).all():
+            x = get_full_student_info(attendance.student_id)
+            student = x.student
+            homeroom = x.homeroom
+            homeroom_group = x.homeroom_group
+            event = get_event(attendance.event_id)
+            if event.name not in report:
+                report[event.name] = {}
+            if homeroom_group.name not in report[event.name]:
+                report[event.name][homeroom_group.name] = {}
+            if homeroom.name not in report[event.name][homeroom_group.name]:
+                report[event.name][homeroom_group.name][homeroom.name] = []
+            
+            report[event.name][homeroom_group.name][homeroom.name].append(student.name)
+        
+        totals = {}
+        for event in report:
+            totals[event] = {}
+            for group in report[event]:
+                totals[event][group] = {}
+                for homeroom in report[event][group]:
+                    totals[event][group][homeroom] = len(report[event][group][homeroom])
+                    
+                totals[event][group]['total by group'] = sum(totals[event][group].values())
+                
+            totals[event]['total by event'] = sum([totals[event][group]['total by group'] for group in totals[event]])
+        
+        for event in totals:
+            sorted_groups = sorted(totals[event].items(), key=parse, reverse=True)
+            totals[event] = dict(sorted_groups)
+
+        return totals
+    except Exception as e:
+        raise e
+
 if __name__ == "__main__":
-    query = 1
-    event = session.query(Event).filter((Event.id == query) |  (query == Event.name)).first()
-    print(event.__dict__)    
+    def pretty_print(d):
+        print(json.dumps(d, indent=4))  
+    
+    pretty_print(report_events())
+    
     pass

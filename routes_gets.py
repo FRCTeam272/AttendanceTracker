@@ -78,3 +78,11 @@ def create_qr_code(display_text, center_image=None):
         img.paste(logo, (xmin, ymin, xmax, ymax))
 
     return img
+
+@app.get("/get/report")
+def get_report():
+    try:
+        student_events = sf.report_events()
+        return student_events
+    except Exception as e:
+        return {"Error": str(e)}
