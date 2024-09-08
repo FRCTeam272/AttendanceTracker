@@ -33,6 +33,7 @@ class Event(Base):
     
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
+    created_at = Column(DateTime, default=datetime.datetime.now)
     # date = Column(String, nullable=False)
     # location = Column(String, nullable=False)
 
@@ -90,5 +91,15 @@ if __name__ == "__main__":
     session.add(new_event)
     session.commit()
 
+    new_student_event = StudentEvent(student_id=jake.id, event_id=new_event.id, reporter="Jake")
+    session.add(new_student_event)
+    session.commit()
+
+    new_student_event = StudentEvent(student_id=ryan.id, event_id=new_event.id, reporter="Ryan")
+    session.add(new_student_event)
+
+    new_student_event = StudentEvent(student_id=mick.id, event_id=new_event.id, reporter="Ryan")
+    session.add(new_student_event)
+    session.commit()
 
     session.close()
