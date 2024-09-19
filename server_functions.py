@@ -180,11 +180,15 @@ class Comb_Student_Homeroom_HomeroomGroup:
         self.homeroom = homeroom
         self.homeroom_group = homeroom_group
 
-def get_full_student_info(query):
+def get_full_student_info(query, homeroom=''):
     global session
     try:
-
-        student = session.query(Student).filter((Student.id == query) | (Student.name == query)).first()
+        if homeroom:
+            homeroom = session.query(Homeroom).filter(Homeroom.name == homeroom).first()
+            student = session.query(Student).filter(Student.homeroom_id == homeroom.id, (Student.id == query) | (Student.name.contains(query))).first()
+            homeroom_group = session.query(HomeroomGroup).filter(HomeroomGroup.id == homeroom.homeroom_group_id).first()
+            return Comb_Student_Homeroom_HomeroomGroup(student, homeroom, homeroom_group)
+        student = session.query(Student).filter((Student.id == query) | (Student.name.contains(query))).first()
         # print(student.__dict__)
         # student = session.query(Student).filter(str(Student.id) == query or Student.name == query)
         homeroom = session.query(Homeroom).filter(Homeroom.id == student.homeroom_id).first()
@@ -193,18 +197,9 @@ def get_full_student_info(query):
     except Exception as e:
         raise e
 
-def report_events():
-    global session
-
-    def parse(x):
-        try:
-            return x[1]['total by group']
-        except:
-            return x[1]
-
-    try:
-        report = {}
-        for attendance in session.query(StudentEvent).order_by(StudentEvent.time_stamp).all():
+def indepth_report():
+    report = {}
+    for attendance in session.query(StudentEvent).order_by(StudentEvent.time_stamp).all():
             x = get_full_student_info(attendance.student_id)
             student = x.student
             homeroom = x.homeroom
@@ -218,7 +213,20 @@ def report_events():
                 report[event.name][homeroom_group.name][homeroom.name] = []
             
             report[event.name][homeroom_group.name][homeroom.name].append(student.name)
-        
+    return report
+
+def report_events():
+    global session
+
+    def parse(x):
+        try:
+            return x[1]['total by group']
+        except:
+            return x[1]
+
+    try:
+        report = indepth_report()
+        # total out that information for the report
         totals = {}
         for event in report:
             totals[event] = {}
@@ -231,6 +239,7 @@ def report_events():
                 
             totals[event]['total by event'] = sum([totals[event][group]['total by group'] for group in totals[event]])
         
+        # sorts by the various totals
         for event in totals:
             sorted_groups = sorted(totals[event].items(), key=parse, reverse=True)
             totals[event] = dict(sorted_groups)

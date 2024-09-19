@@ -14,7 +14,7 @@ async def add_home_room_group(group_name: str, image: UploadFile = File(...)):
 @app.post("/add/home_room")
 def add_home_room(name: str, homeroom_group_name: str):
     try:
-        homeroom = sf.add_home_room(name, homeroom_group_name)
+        homeroom = sf.add_homeroom(name, homeroom_group_name)
         return homeroom.__dict__
     except Exception as e:
         return {"Error": str(e)}

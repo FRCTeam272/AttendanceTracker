@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Display</title>
+    <style>
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Gallery</h1>
+    <div id="image-container"></div>
+
+    <script>
+        const imageContainer = document.getElementById('image-container');
+        const images = [
+            'qrcode_event_1.png',
+            'qrcode_event_2.png',
+            'qrcode_student_26.png',
+            'qrcode_student_115.png',
+            'qrcode_student_229.png',
+            'qrcode_student_251.png',
+            'qrcode_student_282.png',
+            // Add more image filenames here
+        ];
+        let size = 25; // Initial size percentage
+        const sizeDecrement = 10; // Decrease size by 10% for each subsequent image
+
+        images.forEach((image, index) => {
+            const imgElement = document.createElement('img');
+            imgElement.src = image;
+            imgElement.style.width = `${size}%`;
+            imageContainer.appendChild(imgElement);
+            imageContainer.appendChild(document.createElement('br')); // Add a line break after each image
+            imageContainer.appendChild(document.createElement('br')); // Add a line break after each image
+            imageContainer.appendChild(document.createElement('br')); // Add a line break after each image
+            size -= sizeDecrement; // Decrease size for the next image
+        });
+    </script>
+</body>
+</html>
