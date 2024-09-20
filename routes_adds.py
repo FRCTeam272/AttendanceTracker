@@ -1,6 +1,6 @@
 from fastapi import File, UploadFile
 import server_functions as sf
-from routes import app
+from main import app
 
 @app.post("/add/home_room_group")
 async def add_home_room_group(group_name: str, image: UploadFile = File(...)):

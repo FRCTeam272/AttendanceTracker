@@ -1,7 +1,7 @@
 from fastapi import Response
 from fastapi.responses import FileResponse
 import server_functions as sf
-from routes import app
+from main import app
 import qrcode
 import pyqrcode
 from PIL import Image
