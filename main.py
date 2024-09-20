@@ -14,7 +14,7 @@ from PIL import ImageDraw, ImageFont
 
 from fastapi import File, UploadFile
 import server_functions as sf
-from main import app
+
 
 
 app = FastAPI()
@@ -63,7 +63,7 @@ def add_student_event(student_id: int, event_id: int, reporter: str):
 from fastapi import Response
 from fastapi.responses import FileResponse
 import server_functions as sf
-from main import app
+
 import qrcode
 import pyqrcode
 from PIL import Image
