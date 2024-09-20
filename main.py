@@ -1,10 +1,17 @@
-from routes import app
+from fastapi import FastAPI
 import uvicorn
 import server_functions as sf
 from flasgger import Swagger
 
+app = FastAPI()
+
+
 import routes_adds
 import routes_gets
+
+@app.get("/")
+def status():
+    return {"Status": "Ok"}
 
 def main():
     try:    
