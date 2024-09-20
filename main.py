@@ -8,7 +8,7 @@ import routes_gets
 
 def main():
     try:    
-        uvicorn.run(app, host="127.0.0.1", port=5000)
+        # uvicorn.run(app, host="127.0.0.1", port=5000)
         pass
     except Exception as e:
         print("closing database session")
