@@ -1,4 +1,5 @@
 import datetime
+import os
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, BLOB, create_engine
 # from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, declarative_base
@@ -45,7 +46,7 @@ class StudentEvent(Base):
     time_stamp = Column(DateTime, default=datetime.datetime.now)
     reporter = Column(String, nullable=False)
 
-engine = create_engine('sqlite:///database.db')
+engine = create_engine(os.environ.get('DATABASE_URL', 'sqlite:///database.db'))
 Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
