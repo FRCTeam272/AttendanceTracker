@@ -16,6 +16,16 @@ from fastapi import File, UploadFile
 import server_functions as sf
 
 
+from fastapi import Response
+from fastapi.responses import FileResponse
+import server_functions as sf
+
+import qrcode
+import pyqrcode
+from PIL import Image
+import io
+from PIL import ImageDraw, ImageFont
+
 
 app = FastAPI()
 
@@ -59,16 +69,6 @@ def add_student_event(student_id: int, event_id: int, reporter: str):
         return student_event.__dict__
     except Exception as e:
         return {"Error": str(e)}
-
-from fastapi import Response
-from fastapi.responses import FileResponse
-import server_functions as sf
-
-import qrcode
-import pyqrcode
-from PIL import Image
-import io
-from PIL import ImageDraw, ImageFont
 
 @app.get("/get/student/{query}")
 def get_student(query: str):
