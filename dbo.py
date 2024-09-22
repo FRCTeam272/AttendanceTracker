@@ -1,6 +1,7 @@
 import datetime
 import os
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, BLOB, create_engine
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, BINARY, create_engine
+import sqlalchemy
 # from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, declarative_base
 
@@ -19,7 +20,7 @@ class HomeroomGroup(Base):
     
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
-    image = Column(BLOB, nullable=True)
+    image = Column(sqlalchemy.LargeBinary, nullable=True) # large binary is used insted of BLOB for postgres compatibility
 
 class Homeroom(Base):
     __tablename__ = 'homerooms'
@@ -47,7 +48,10 @@ class StudentEvent(Base):
     reporter = Column(String, nullable=False)
 
 engine = create_engine(
-    os.environ.get('DATABASE_URL', 'sqlite:///database.db')
+    os.environ.get(
+        'DATABASE_URL', 
+        'sqlite:///database.db'
+    )
     .replace("postgres", "postgresql")
 )
 Base.metadata.create_all(engine)
