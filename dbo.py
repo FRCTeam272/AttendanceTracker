@@ -46,7 +46,10 @@ class StudentEvent(Base):
     time_stamp = Column(DateTime, default=datetime.datetime.now)
     reporter = Column(String, nullable=False)
 
-engine = create_engine(os.environ.get('DATABASE_URL', 'sqlite:///database.db'))
+engine = create_engine(
+    os.environ.get('DATABASE_URL', 'sqlite:///database.db')
+    .replace("postgres", "postgresql")
+)
 Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
