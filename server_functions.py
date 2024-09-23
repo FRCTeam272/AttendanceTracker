@@ -1,3 +1,4 @@
+import datetime
 from dbo import HomeroomGroup, StudentEvent, Student, Event, Homeroom, Base, engine, Session
 import json
     
@@ -69,10 +70,10 @@ def get_homerooms():
     except Exception as e:
         raise e
 
-def add_event(name):
+def add_event(name: str, multiplyer: float = 1.0, end_date: datetime.datetime = None):
     global session
     try:
-        new_event = Event(name=name)
+        new_event = Event(name=name, multiplier=multiplyer)
         session.add(new_event)
         session.commit()
         return new_event
@@ -248,10 +249,41 @@ def report_events():
     except Exception as e:
         raise e
 
+def summary_report():
+
+    def find(list, value):
+        for i in list:
+            if i.id == value:
+                return i
+        return None
+
+    try:
+        # load in all data
+        student_events = session.query(StudentEvent).all()
+        students = session.query(Student).all()
+        homerooms = session.query(Homeroom).all()
+        homeroom_groups = session.query(HomeroomGroup).all()
+        event = session.query(Event).all()
+        results = {}
+        for i in homeroom_groups:
+            results[i.name] = 0
+        
+        for i in student_events:
+            student = find(students, i.student_id)
+            homeroom = find(homerooms, student.homeroom_id)
+            group = find(homeroom_groups, homeroom.homeroom_group_id)
+            event = find(event, i.event_id)
+            results[group.name] += 1 * event.multiplier
+
+        return results
+    except Exception as e:
+        raise e
+        
+
 if __name__ == "__main__":
     def pretty_print(d):
         print(json.dumps(d, indent=4))  
     
-    pretty_print(report_events())
+    pretty_print(summary_report())
     
     pass
