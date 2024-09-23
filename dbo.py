@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 import datetime
 import os
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, BINARY, create_engine
@@ -36,6 +37,7 @@ class Event(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.datetime.now)
+    multiplier = Column(sqlalchemy.Float, default=1)
     # date = Column(String, nullable=False)
     # location = Column(String, nullable=False)
 
@@ -52,7 +54,7 @@ engine = create_engine(
         'DATABASE_URL', 
         'sqlite:///database.db'
     )
-    .replace("postgres", "postgresql")
+    .replace("postgres", "postgresql") # SQL Alchemy doesn't support postgres:// as of 2021 so well do this to make heroku happy
 )
 Base.metadata.create_all(engine)
 
