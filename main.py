@@ -26,7 +26,10 @@ import pyqrcode
 from PIL import Image
 import io
 from PIL import ImageDraw, ImageFont
-
+import base64
+from io import BytesIO
+import matplotlib.pyplot as plt
+import re
 
 app = FastAPI()
 
@@ -184,7 +187,47 @@ def school_overview():
 
 @app.get("/")
 def status():
-    return {"Status": "Ok"}
+    def add_space_before_capital_letters(text):
+    # Use re.sub to add a space before each capital letter
+        modified_text = re.sub(r'([A-Z])', r' \1', text)
+        return modified_text
+    # Generate some data for the graph
+    student_events = sf.summary_report()
+
+    labels = [add_space_before_capital_letters(i).strip() for i in student_events.keys()]
+    values = [student_events[label] for label in student_events.keys()]
+    # Create a bar chart
+    fig, ax = plt.subplots()
+    ax.bar(labels, values)
+    ax.set_xlabel('Events')
+    ax.set_ylabel('Count')
+    ax.set_title('Event Participation Overview')
+    fig.set_size_inches(15, 6)
+
+    # Save the plot to a BytesIO object
+    buf = BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    img_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+    buf.close()
+
+    # Embed the image in the HTML
+    img_html = f'<img src="data:image/png;base64,{img_base64}" alt="Event Participation Overview">'
+    overview = school_overview()
+    html_content = f"""
+    <html>
+        <head>
+            <title>School Overview</title>
+        </head>
+        <body>
+            <h1>School Overview</h1>
+            <div>
+                {img_html}
+            </div>    
+        </body>
+    </html>
+    """
+    return Response(content=html_content, media_type="text/html")
 
 def main():
     try:    
