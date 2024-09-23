@@ -56,9 +56,9 @@ def add_student(name: str, homeroom_name: str):
         return {"Error": str(e)}
 
 @app.post("/add/event")
-def add_event(name: str, multiplyer: float = 1.0, end_date: datetime.datetime = None):
+def add_event(name: str, multiplyer: float = 1.0):
     try:
-        event = sf.add_event(name)
+        event = sf.add_event(name, multiplyer=multiplyer)
         return event.__dict__
     except Exception as e:
         return {"Error": str(e)}

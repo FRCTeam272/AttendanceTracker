@@ -70,7 +70,7 @@ def get_homerooms():
     except Exception as e:
         raise e
 
-def add_event(name: str, multiplyer: float = 1.0, end_date: datetime.datetime = None):
+def add_event(name: str, multiplyer: float = 1.0):
     global session
     try:
         new_event = Event(name=name, multiplier=multiplyer)
