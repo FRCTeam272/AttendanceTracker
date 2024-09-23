@@ -1,7 +1,13 @@
-import dbo
-from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table
-from sqlalchemy.orm import sessionmaker
-import sqlalchemy
+from glob import glob
+from PyPDF2 import PdfMerger
 
-# Add columns to the table
-dbo.session.execute(sqlalchemy.text('ALTER TABLE events ADD COLUMN multiplier FLOAT'))
+file = glob('printQR/*.pdf')
+file.sort()
+
+merger = PdfMerger()
+
+for pdf in file:
+    merger.append(pdf)
+
+merger.write("merged.pdf")
+merger.close()
