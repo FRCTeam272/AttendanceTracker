@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 import datetime
 import os
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, BINARY, create_engine
@@ -49,13 +48,25 @@ class StudentEvent(Base):
     time_stamp = Column(DateTime, default=datetime.datetime.now)
     reporter = Column(String, nullable=False)
 
-engine = create_engine(
-    os.environ.get(
-        'DATABASE_URL', 
-        'sqlite:///database.db'
+try:
+    from dotenv import load_dotenv
+
+    engine = create_engine(
+        os.environ.get(
+            'DATABASE_URL', 
+            'sqlite:///database.db'
+        )
+        .replace("postgres", "postgresql") # SQL Alchemy doesn't support postgres:// as of 2021 so well do this to make heroku happy
     )
-    .replace("postgres", "postgresql") # SQL Alchemy doesn't support postgres:// as of 2021 so well do this to make heroku happy
-)
+except:
+    engine = create_engine(
+        os.environ.get(
+            'DATABASE_URL', 
+            'sqlite:///database.db'
+        )
+        .replace("postgres", "postgresql") # SQL Alchemy doesn't support postgres:// as of 2021 so well do this to make heroku happy
+    )
+
 Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
