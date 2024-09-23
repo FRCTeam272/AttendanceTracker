@@ -1,3 +1,4 @@
+import datetime
 from fastapi import FastAPI
 import uvicorn
 import server_functions as sf
@@ -55,7 +56,7 @@ def add_student(name: str, homeroom_name: str):
         return {"Error": str(e)}
 
 @app.post("/add/event")
-def add_event(name: str):
+def add_event(name: str, multiplyer: float = 1.0, end_date: datetime.datetime = None):
     try:
         event = sf.add_event(name)
         return event.__dict__
@@ -169,6 +170,14 @@ def get_report():
 def indepth_report():
     try:
         student_events = sf.indepth_report()
+        return student_events
+    except Exception as e:
+        return {"Error": str(e)}
+
+@app.get("/get/school_overview")
+def school_overview():
+    try:
+        student_events = sf.summary_report()
         return student_events
     except Exception as e:
         return {"Error": str(e)}
