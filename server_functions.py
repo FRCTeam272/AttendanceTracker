@@ -263,7 +263,8 @@ def summary_report():
         students = session.query(Student).all()
         homerooms = session.query(Homeroom).all()
         homeroom_groups = session.query(HomeroomGroup).all()
-        event = session.query(Event).all()
+        events = session.query(Event).all()
+        
         results = {}
         for i in homeroom_groups:
             results[i.name] = 0
@@ -272,7 +273,7 @@ def summary_report():
             student = find(students, i.student_id)
             homeroom = find(homerooms, student.homeroom_id)
             group = find(homeroom_groups, homeroom.homeroom_group_id)
-            event = find(event, i.event_id)
+            event = find(events, i.event_id)
             results[group.name] += 1 * event.multiplier
 
         return results
