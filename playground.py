@@ -1,10 +1,7 @@
 import dbo
-import requests
-from time import sleep
-url = "https://jake-attendance-tracker-860c7b78dcfb.herokuapp.com"
+from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table
+from sqlalchemy.orm import sessionmaker
+import sqlalchemy
 
-for i in dbo.session.query(dbo.HomeroomGroup).all():
-    print(i.__dict__)
-    response = requests.post(f"{url}/add/home_room_group", data=i.__dict__)
-    print(response.json())
-    sleep(2)
+# Add columns to the table
+dbo.session.execute(sqlalchemy.text('ALTER TABLE events ADD COLUMN multiplier FLOAT'))
