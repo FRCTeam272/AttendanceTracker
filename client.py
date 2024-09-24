@@ -1,7 +1,18 @@
-import requests
-import os
+try:
+    import requests
+    import os
+except:
+    import os
+    try:
+        os.system("python -m pip install requests")
+        import requests
+    except:
+        print("Could not install requests, please try again while conected to the internet")
+
+
+domain = "https://jake-attendance-tracker-860c7b78dcfb.herokuapp.com"
 def generate_end_point(student_id, event_id, reporter):
-    return f"http://127.0.0.1:5000/add/attendance?student_id={student_id}&event_id={event_id}&reporter={reporter}"
+    return f"{domain}/add/attendance?student_id={student_id}&event_id={event_id}&reporter={reporter}"
 
 def read_scanner_input():
     reporter = input("Enter reporter name (type): ")
