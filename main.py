@@ -229,6 +229,22 @@ def status():
     """
     return Response(content=html_content, media_type="text/html")
 
+@app.get(
+        "/get/qrcode/event/last",
+        responses={200: {"content": {"image/png": {}}}},
+        response_class=Response
+)
+def get_last_event_qr_code():
+    try:
+        container = sf.get_last_event()
+        qr_img = create_qr_code(container.id, additional_text=container.name)
+        buffer = io.BytesIO()
+        qr_img.save(buffer, format="PNG")
+        qr_img = buffer.getvalue()
+        return Response(qr_img, media_type="image/png")
+    except Exception as e:
+        return {"Error": str(e)}
+
 def main():
     try:    
         uvicorn.run(app)

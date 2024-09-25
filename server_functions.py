@@ -279,7 +279,14 @@ def summary_report():
         return results
     except Exception as e:
         raise e
-        
+
+def get_last_event():
+    global session
+    try:
+        event = session.query(Student).order_by(Student.id.desc()).first()
+        return event
+    except Exception as e:
+        raise e
 
 if __name__ == "__main__":
     def pretty_print(d):
