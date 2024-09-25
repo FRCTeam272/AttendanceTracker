@@ -35,7 +35,6 @@ class Event(Base):
     
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.datetime.now)
     multiplier = Column(sqlalchemy.Float, default=1)
     # date = Column(String, nullable=False)
     # location = Column(String, nullable=False)
