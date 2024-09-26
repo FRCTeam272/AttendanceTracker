@@ -89,6 +89,14 @@ def get_event(query):
     except Exception as e:
         raise e
 
+def get_last_event():
+    global session
+    try:
+        event = session.query(Event).order_by(Event.id.desc()).first()
+        return event
+    except Exception as e:
+        raise e
+
 def get_events():
     global session
     try:
@@ -283,7 +291,7 @@ def summary_report():
 def get_last_event():
     global session
     try:
-        event = session.query(Student).order_by(Student.id.desc()).first()
+        event = session.query(Event).order_by(Event.id.desc()).first()
         return event
     except Exception as e:
         raise e

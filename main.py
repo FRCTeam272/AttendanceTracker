@@ -78,7 +78,20 @@ def add_student_event(student_id: int, event_id: int, reporter: str):
 def get_student(query: str):
     try:
         student = sf.get_full_student_info(query)
-        values = student.__dict__
+        values = {
+            "student": {
+                "id": student.student.id,
+                "name": student.student.name
+            },
+            "homeroom": {
+                "id": student.homeroom.id,
+                "name": student.homeroom.name
+            },
+            "homeroom_group": {
+                "id": student.homeroom_group.id,
+                "name": student.homeroom_group.name
+            }
+        }
         # values.pop('_sa_instance_state')
         return values
         
@@ -229,15 +242,13 @@ def status():
     """
     return Response(content=html_content, media_type="text/html")
 
-@app.get(
-        "/get/qrcode/event/last",
+@app.get("/get/last_qr_code",
         responses={200: {"content": {"image/png": {}}}},
-        response_class=Response
-)
-def get_last_event_qr_code():
+        response_class=Response)
+def get_last_qr_code():
     try:
         container = sf.get_last_event()
-        qr_img = create_qr_code(container.id)
+        qr_img = create_qr_code(container.id, additional_text=container.name)
         buffer = io.BytesIO()
         qr_img.save(buffer, format="PNG")
         qr_img = buffer.getvalue()
