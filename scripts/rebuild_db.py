@@ -4,7 +4,11 @@ import requests
 import time
 
 domain = "https://jake-attendance-tracker-860c7b78dcfb.herokuapp.com"
-connection = sql.connect('database.db')
+connection = None
+try:
+    connection = sql.connect('../database.db')
+except:
+    connection = sql.connect('../database.db')
 class HomeroomGroup:
     def __init__(self, id, name, image):
         self.id = id

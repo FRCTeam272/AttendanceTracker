@@ -237,7 +237,7 @@ def status():
 def get_last_event_qr_code():
     try:
         container = sf.get_last_event()
-        qr_img = create_qr_code(container.id, additional_text=container.name)
+        qr_img = create_qr_code(container.id)
         buffer = io.BytesIO()
         qr_img.save(buffer, format="PNG")
         qr_img = buffer.getvalue()

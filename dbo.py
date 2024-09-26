@@ -49,7 +49,7 @@ class StudentEvent(Base):
 
 try:
     from dotenv import load_dotenv
-
+    load_dotenv()
     engine = create_engine(
         os.environ.get(
             'DATABASE_URL', 
