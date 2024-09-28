@@ -74,7 +74,7 @@ def add_student_event(student_id: int, event_id: int, reporter: str):
     except Exception as e:
         return {"Error": str(e)}
 
-@app.get("/get/student/{query}")
+@app.get("/get/student/")
 def get_student(query: str):
     try:
         student = sf.get_full_student_info(query)
@@ -99,7 +99,7 @@ def get_student(query: str):
         return {"Error": str(e)}
 
 @app.get(
-        "/get/qrcode/student/{student_id}",
+        "/get/qrcode/student",
         responses={200: {"content": {"image/png": {}}}},
         response_class=Response
 )
@@ -116,7 +116,7 @@ def get_student_qr_code(query: str, homeroom = ''):
         return {"Error": str(e)}
 
 @app.get(
-        "/get/qrcode/event/{query}",
+        "/get/qrcode/event/",
         responses={200: {"content": {"image/png": {}}}},
         response_class=Response
 )
@@ -209,9 +209,10 @@ def status():
 
     labels = [add_space_before_capital_letters(i).strip() for i in student_events.keys()]
     values = [student_events[label] for label in student_events.keys()]
+    colors = ['red', 'orange', 'purple', 'blue', 'yellow']
     # Create a bar chart
     fig, ax = plt.subplots()
-    ax.bar(labels, values)
+    ax.bar(labels, values, color=colors)
     ax.set_xlabel('Events')
     ax.set_ylabel('Count')
     ax.set_title('Event Participation Overview')
