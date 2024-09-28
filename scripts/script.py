@@ -1,24 +1,47 @@
 import requests
-import random
+import sqlite3 as sql
+from glob import glob
+import os
+import time
+import webbrowser
+import pyautogui
 
-random.seed(42)  # Set seed for reproducibility
-student_ids = list(map(lambda x: random.randint(1, 600), range(1, 6)))
-print(student_ids)
+good = "../qrcodes/A1/_index.html"
+with open(good, 'r') as f:
+    good = f.read()
+print(good)
 
-for student_id in student_ids:
-    response = requests.get(f"http://localhost:5000/get/qrcode/student/{student_id}")
-    if response.status_code == 200:
-        print(f"QR Code for student {student_id}")
-        with open(f"qrcode_student_{student_id}.png", "wb") as f:
-            f.write(response.content)
-    else:
-        print(f"Failed to get QR Code for student {student_id}, status code: {response.status_code}")
+for i in glob("../qrcodes/*"):
+    files = glob(i + "/*.png")
+    files = [i.split('\\')[-1] for i in files]
+    files.sort(key=lambda x: int(x.split('.')[0]))
+    title = i.split('\\')[-1]
+    print(files)
+    with open(i + "/_index.html", 'w') as f:
+        f.write(good.replace("{TARGET}", str(files)).replace("{TITLE}", title))
 
-for i in range(1, 3):
-    response = requests.get(f"http://localhost:5000/get/qrcode/event/{i}")
-    if response.status_code == 200:
-        print(f"QR Code for event i")
-        with open(f"qrcode_event_{i}.png", "wb") as f:
-            f.write(response.content)
-    else:
-        print(f"Failed to get QR Code for student {student_id}, status code: {response.status_code}")
+for i in glob("../qrcodes/*/*.html"):
+    pass
+    webbrowser.open_new_tab("file://" + os.path.abspath(i))
+    time.sleep(5)  # Give some time to switch to the browser window
+    pyautogui.click()
+    time.sleep(5)
+    pyautogui.hotkey('ctrl', 'p')
+    time.sleep(5)
+    pyautogui.press('enter')
+    time.sleep(5)
+    pyautogui.press('enter')
+    time.sleep(5)
+    pyautogui.hotkey('ctrl', 'w')
+    print(i)
+# domain = "https://jake-attendance-tracker-860c7b78dcfb.herokuapp.com/"
+# for i in range(599,601):
+#     try:
+#         response = requests.get(domain + "/get/qrcode/student/{student_id}?query=" + str(i))
+#         with open(f"../qrcodes/{i}.png", "wb") as f:
+#             f.write(response.content)
+#             print(f"{i}/600 {response.status_code}")
+#             time.sleep(.1)
+#     except:
+#         pass
+#     time.sleep(.1)
